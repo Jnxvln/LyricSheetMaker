@@ -48,7 +48,7 @@ export default function Stanza({ lyrics, onWordClicked }) {
     // Run parent's onWordClicked handler?
     onWordClicked(evt, state.selectedWord);
 
-    console.log("Chord Span ID: ", chordSpanId);
+    // console.log("Chord Span ID: ", chordSpanId);
 
     const chordSpanElm = document.querySelector(`#${chordSpanId}`);
 
@@ -61,7 +61,7 @@ export default function Stanza({ lyrics, onWordClicked }) {
     );
     ReactDOM.render(elm, chordSpanElm);
 
-    console.log("CHORD SPAN ELM: ", chordSpanElm);
+    // console.log("CHORD SPAN ELM: ", chordSpanElm);
   };
 
   const generateWords = (lyrics) => {
@@ -111,7 +111,7 @@ export default function Stanza({ lyrics, onWordClicked }) {
   };
 
   useEffect(() => {
-    console.log("Selected Word: ", state.selectedWord);
+    // console.log("Selected Word: ", state.selectedWord);
   }, [state.selectedWord]);
   // #endregion =========================================
 

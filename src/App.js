@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import Stanza from "./Stanza";
 import SongTitle from "./Meta/SongTitle";
 import SongArtist from "./Meta/SongArtist";
+import SongComposer from "./Meta/SongComposer";
+import LyricsBy from "./Meta/LyricsBy";
+import LineHeight from "./Controls/LineHeight";
 import "./styles.css";
 
 export default function App() {
@@ -22,17 +25,18 @@ export default function App() {
 
   const onWordClicked = (evt, selectedWord) => {
     // console.log("APP.JS: Selected Word EVT: ", evt);
-    console.log("APP.JS: Selected Word: ", selectedWord);
+    // console.log("APP.JS: Selected Word: ", selectedWord);
   };
 
   const handleControlUpdate = (evt) => {
-    // console.log(evt)
+    // console.log(evt);
     if (evt.target.name === "wordSpacing") {
       setState({
         ...state,
         [evt.target.name]: `${evt.target.value.toString()}rem`
       });
     } else {
+      console.log("evt.target.name: ", evt.target.name);
       setState({
         ...state,
         [evt.target.name]: evt.target.value.toString()
@@ -107,13 +111,13 @@ export default function App() {
     }
   };
 
-  // CALL ONCE - Initialize
-  useEffect(() => {
-    // Initialize document root styles
-    let root = document.documentElement;
-    root.style.setProperty("--line-height", state.lineHeight);
-    root.style.setProperty("--word-spacing", state.wordSpacing);
+  // Initialize document root styles (binds lineHeight and wordSpacing in the CSS)
+  let root = document.documentElement;
+  root.style.setProperty("--line-height", state.lineHeight);
+  root.style.setProperty("--word-spacing", state.wordSpacing);
 
+  // INITIALIZE (Runs Once)
+  useEffect(() => {
     // wordSpacing is a Number, but neets to be a string with "rem" appended
     if (state.wordSpacing.toString().split("rem").length <= 1) {
       setState({
@@ -128,44 +132,26 @@ export default function App() {
   return (
     <div className="App">
       {state.song && (
+        // SONG META HEADER
         <header>
           <SongTitle title={state.song.title} askForSongMeta={askForSongMeta} />
 
-          <div
-            style={{
-              marginTop: "1.2rem",
-              textAlign: "right",
-              paddingRight: "1rem"
-            }}
-          >
+          {/* SONG META: ARTIST, COMPOSER, LYRICIST */}
+          <div className="songMetaDetails">
             <SongArtist
               artist={state.song.artist}
               askForSongMeta={askForSongMeta}
             />
 
-            {state.song.composer && state.song.composer.length > 0 && (
-              <p
-                className="songInfo"
-                onClick={() => askForSongMeta("composer")}
-              >
-                <span className="songInfoContent">
-                  <strong>Composer: </strong>
-                  {state.song.composer}
-                </span>
-              </p>
-            )}
+            <SongComposer
+              composer={state.song.composer}
+              askForSongMeta={askForSongMeta}
+            />
 
-            {state.song.lyricsBy && state.song.lyricsBy.length > 0 && (
-              <p
-                className="songInfo"
-                onClick={() => askForSongMeta("lyricsBy")}
-              >
-                <span className="songInfoContent">
-                  <strong>Lyrics by: </strong>
-                  {state.song.lyricsBy}
-                </span>
-              </p>
-            )}
+            <LyricsBy
+              author={state.song.lyricsBy}
+              askForSongMeta={askForSongMeta}
+            />
           </div>
         </header>
       )}
@@ -173,23 +159,10 @@ export default function App() {
       {/* CONTROLS */}
       <div className="no-print lyricControls">
         {/* LINE HEIGHT CONTROL */}
-        <div className="field" style={{ marginRight: "2rem" }}>
-          <label>Line Height</label>
-          <input
-            type="range"
-            name="lineHeight"
-            className="control"
-            value={state.lineHeight}
-            onChange={handleControlUpdate}
-            min={1}
-            max={10}
-            step={0.1}
-          />
-          <br />
-          <div style={{ textAlign: "center" }}>
-            <small>{state.lineHeight}</small>
-          </div>
-        </div>
+        <LineHeight
+          lineHeight={state.lineHeight}
+          handleControlUpdate={handleControlUpdate}
+        />
 
         {/* WORD SPACING CONTROL */}
         <div className="field">

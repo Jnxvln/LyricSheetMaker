@@ -80,6 +80,12 @@ body {
   cursor: pointer;
 }
 
+.songMetaDetails {
+  margin-top: 1.2rem;
+  text-align: right;
+  padding-right: 1rem;
+}
+
 @media print {
   .no-print,
   .no-print * {
