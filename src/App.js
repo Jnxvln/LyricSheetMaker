@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import Stanza from "./Stanza";
-import SongTitle from "./Meta/SongTitle";
-import SongArtist from "./Meta/SongArtist";
-import SongComposer from "./Meta/SongComposer";
-import LyricsBy from "./Meta/LyricsBy";
+import MetaHead from "./Meta/MetaHead";
+import Controls from "./Controls/Controls";
 import LineHeight from "./Controls/LineHeight";
+import WordSpacing from "./Controls/WordSpacing";
+import LyricsBox from "./Controls/LyricsBox";
 import "./styles.css";
 
 export default function App() {
@@ -42,11 +42,6 @@ export default function App() {
         [evt.target.name]: evt.target.value.toString()
       });
     }
-  };
-
-  const getCurrentWordSpacing = () => {
-    let spacing = state.wordSpacing.toString().split("rem");
-    return spacing[0];
   };
 
   const askForSongMeta = (meta) => {
@@ -133,68 +128,27 @@ export default function App() {
     <div className="App">
       {state.song && (
         // SONG META HEADER
-        <header>
-          <SongTitle title={state.song.title} askForSongMeta={askForSongMeta} />
-
-          {/* SONG META: ARTIST, COMPOSER, LYRICIST */}
-          <div className="songMetaDetails">
-            <SongArtist
-              artist={state.song.artist}
-              askForSongMeta={askForSongMeta}
-            />
-
-            <SongComposer
-              composer={state.song.composer}
-              askForSongMeta={askForSongMeta}
-            />
-
-            <LyricsBy
-              author={state.song.lyricsBy}
-              askForSongMeta={askForSongMeta}
-            />
-          </div>
-        </header>
+        <MetaHead
+          songTitle={state.song.title}
+          composer={state.song.composer}
+          artist={state.song.artist}
+          lyricsBy={state.song.lyricsBy}
+          askForSongMeta={askForSongMeta}
+        />
       )}
 
       {/* CONTROLS */}
-      <div className="no-print lyricControls">
-        {/* LINE HEIGHT CONTROL */}
-        <LineHeight
-          lineHeight={state.lineHeight}
-          handleControlUpdate={handleControlUpdate}
-        />
-
-        {/* WORD SPACING CONTROL */}
-        <div className="field">
-          <label>Word Spacing</label>
-          <input
-            type="range"
-            name="wordSpacing"
-            className="control"
-            value={getCurrentWordSpacing()}
-            onChange={handleControlUpdate}
-            min={0}
-            max={4}
-            step={0.1}
-          />
-          <br />
-          <div style={{ textAlign: "center" }}>
-            <small>{state.wordSpacing}</small>
-          </div>
-        </div>
-      </div>
+      <Controls
+        lineHeight={state.lineHeight}
+        wordSpacing={state.wordSpacing}
+        handleControlUpdate={handleControlUpdate}
+      />
 
       {/* LYRICS TEXTAREA */}
-      <div className="field no-print">
-        <label>Lyrics: </label>
-        <br />
-        <textarea
-          value={state.lyrics}
-          onChange={handleChangeLyrics}
-          rows={8}
-          cols={60}
-        ></textarea>
-      </div>
+      <LyricsBox
+        lyrics={state.lyrics}
+        handleChangeLyrics={handleChangeLyrics}
+      />
 
       {/* STANZA */}
       <div id="stanza0" className="stanza">
